@@ -25,6 +25,6 @@ if [ $1 == "stop" ];
 then	
 	docker container stop jrvs-psql
 	systemctl stop docker
-	exit 1
+	exit 0
 fi
 exit 1

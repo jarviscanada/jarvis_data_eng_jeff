@@ -39,9 +39,6 @@ then
 	then
 		docker volume create pgdata
 	fi
-	# start the psql interface
-	psql -h localhost -U postgres -W
-
 	exit 0
 fi
 

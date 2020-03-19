@@ -2,9 +2,10 @@
 
 #get cpu information
 lscpu_out=`lscpu`
+
 #create a timestamp function
 timestamp() {
-	date +%Y-%m-%d %H-%M-%S
+	date "+%Y-%m-%d %H-%M-%S"
 }
 
 #hardware

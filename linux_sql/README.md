@@ -34,15 +34,67 @@ The `host_usage` table will record the cpu usage data from the individual server
 * `disk_io` will record the current amount of disk I/O Operations.
 * `disk_available` will record how much disk space (in MB) is available.
 
+
 ### Script Descriptions
 `psql_docker.sh` is the bash file that will set up the envrionment so that everything is prepared. `psql_docker.sh` will ensure that the docker container is started, volume created, as well as the PSQL container running so that the operations on the database can begin.
+
 `ddl.sql` will initialize the PSQL database `host_data` in addition to creating the tables to store hardware specifications as well as usage data.
+
 `scripts/host_info.sh` script will be ran once to provide specifications about the server to the PSQL DB.
+
 `scripts/host_usage.sh` is the automated script by crontab to be ran every minute to provide CPU usage data to the PSQL DB.
+
 `sql/queries.sql` will provide the following SQL results: 
     1) Group hosts by CPU number and sort by their memory size in descending order(within each cpu_number group)
     2) Average used memory in percentage over 5 mins interval for each host
 
 ## Usage
+**Pre-Requisite: the system requires docker to be provisioned**
+
+### Initialize Database and Tables
+```
+# To begin inside of the current directory, start with calling
+
+./psql_docker.sh start db_password
+
+# This will set up the docker environment
+# Then intialize the database and their tables
+
+psql -h psql_host -p 5432 -U postgres -W -f ./sql/ddl.sql
+```
+### `host_info.sh` usage
+`host_info.sh` tells the database information about the system so this script will only be run once. To do this
+```
+# from this directory
+./scripts/host_info.sh psql_host psql_port db_name psql_user psql_password
+```
+### `host_usage.sh` usage
+Normally, this script would be run automatically by a crontab.
+However to manually run the script:
+```
+scripts/host_usage.sh psql_host psql_port db_name psql_user psql_password
+```
+### Crontab usage
+Most of the time `host_usage.sh` will be run through crontab
+```
+# begin by opening your crontab jobs
+
+crontab -e
+
+#inside of the editor enter the following line and exit
+
+* * * * * bash [path to this directory]/scripts/host_usage.sh localhost 5432 host_agent postgres password > /tmp/host_usage.log
+
+# Verify that the edit was successful
+
+crontab -ls
+
+```
 
 ## Improvement
+  1) Handle the machines have their specifications changed. This would mean being able to update specific lines in `host_info` to reflect the changes as well as providing some information about the previous specifications.
+  
+  2) Be able to alert the server administrators about when their system are about to run out of available disk space.
+  
+  3) Create a cron job to summarize the daily usage on each machine and upload it remotely so that if the database were lost there would still be reports. Additionally it would allow the server administrators to be able to skim through the usage results to see if anything went wrong in the past day.
+

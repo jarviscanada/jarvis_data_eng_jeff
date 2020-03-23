@@ -1,5 +1,6 @@
 #! /bin/bash
-
+instruction= $1
+password=$2;
 #make sure the correct number of arguments are given
 if [ $# -lt 1 ] || [ $# -gt 2 ];
 then
@@ -8,18 +9,21 @@ then
 fi
 
 # Check that the command is to start or stop docker
-if [ $1 != "start" ] || [ $1 != "stop" ]
+if [ $instruction != "start" ] || [ $instruction != "stop" ]
 then
 	echo "Incorrect command, use ./psql_docker.sh start | stop [password]"
 	exit 1
 fi
+
 # Handle starting docker logic
-if [ $1 == "start" ];
+if [ $instruction == "start" ];
 then
 	# If the password is not provided set the password to the default
 	if [ $# -eq 1 ];
 	then
-		export PGPASSWORD = 'password'
+		export PGPASSWORD='password'
+	else
+		export PGPASSWORD=$password
 	fi
 	# start docker or give the status if docker is already started
 	systemctl status docker  || systemctl start docker
@@ -39,17 +43,15 @@ then
 	then
 		docker volume create pgdata
 	fi
-	# start the psql interface
-	psql -h localhost -U postgres -W
-
 	exit 0
 fi
 
-if [ $1 == "stop" ];
+if [ $instruction == "stop" ];
 then
 	# stop and exit from docker
 	docker container stop jrvs-psql
 	systemctl stop docker
 	exit 0
 fi
-exit 1
+
+exit 0

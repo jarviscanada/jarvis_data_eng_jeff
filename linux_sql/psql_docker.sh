@@ -1,6 +1,9 @@
 #! /bin/bash
-instruction= $1
-password=$2;
+
+#record the arguements
+instruction=$1
+password=$2
+
 #make sure the correct number of arguments are given
 if [ $# -lt 1 ] || [ $# -gt 2 ];
 then

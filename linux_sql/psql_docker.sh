@@ -1,6 +1,6 @@
 #! /bin/bash
 
-#record the arguements
+#assign the arguements
 instruction=$1
 password=$2
 
@@ -22,11 +22,9 @@ fi
 if [ $instruction == "start" ];
 then
 	# If the password is not provided set the password to the default
-	if [ $# -eq 1 ];
+	if [ $# -eq 2 ];
 	then
-		export PGPASSWORD='password'
-	else
-		export PGPASSWORD=$password
+		PGPASSWORD=$password
 	fi
 	# start docker or give the status if docker is already started
 	systemctl status docker  || systemctl start docker

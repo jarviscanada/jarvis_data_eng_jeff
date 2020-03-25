@@ -21,16 +21,23 @@ fi
 # Handle starting docker logic
 if [ $instruction == "start" ];
 then
-	# If the password is not provided set the password to the default
-	if [ $# -eq 2 ];
-	then
-		PGPASSWORD=$password
-	fi
 	# start docker or give the status if docker is already started
 	systemctl status docker  || systemctl start docker
-
-	# start the container for the first time if needed
+	
+	# Check if the PSQL container already exists
 	linecount=`docker ps -af name=jrvs-psql | wc -l`
+	
+	# If the password is not provided and the container does not exist yet, return an error
+	# Otherwise, set the password to the default
+	if [ $# -eq 1 ] && [ "$linecount" -lt 2 ];
+	then
+		echo "Please provide a password to initialzie the psql container"
+		exit 1
+	else
+		PGPASSWORD=$password
+	fi
+	
+	# create the container for the first time if the container does not exist
 	if [ "$linecount" -lt 2 ];
 	then
 		docker run --name jrvs-psql -e POSTGRES_PASSWORD=$PGPASSWORD -d -v pgdata:/var/lib/postgresql/data -p 5432:5432 postgres

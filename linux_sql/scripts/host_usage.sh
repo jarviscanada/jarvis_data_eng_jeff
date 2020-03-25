@@ -18,8 +18,6 @@ psql_password=$5
 
 timestamp=$(date "+%Y-%m-%d-%H:%M:%S")
 hostname=$(hostname -f)
-host_id=$(psql -h $psql_host -p $psql_port -d $db_name -U $psql_user -c 
-			"")
 memory_free=$(vmstat --unit M | awk 'FNR == 3 {print $4}')
 cpu_idle=$(vmstat | awk 'FNR == 3 {print $15}')
 cpu_kernel=$(vmstat | awk 'FNR == 3 {print $14}')

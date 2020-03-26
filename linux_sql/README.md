@@ -2,7 +2,7 @@
 
 ## Introduction
   
-The Linux Cluster Administration (LCA) team manages a Linux cluster of 10 nodes/servers which are running CentOS 7. These servers are internally connected through a switch and able to communicate through internal IPv4 addresses. The goal of the monitoring agent is to record the hardware specifications of each node and monitor node resource usages (e.g. CPU/Memory) in realtime. The monitoring agent is implemented using bash scripts and the PostgreSQL database, and the results of the agent will then be stored in the RDBMS database.
+The Linux Cluster Monitoring Agent is designed to help keep track of CPU usages on servers; the goal of this project is to have a monitoring agent scripts that keeps a minute by minute update of the CPU statuses of all servers to be sent to a central postgres sequel (PSQL) database for safekeeping. To do that, the monitoring agent has a docker PSQL container in one of the servers and collects the basic host information of all the other severs. Then, a script that is scheduled on a crontab to run every minute that will continiously send the systems' CPU information to the PSQL database.
   
 ## Architecture and Design
 ![Image of Architecture](./assets/Architecture.png)

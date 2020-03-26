@@ -2,7 +2,7 @@
 
 ## Introduction
   
-The Linux Cluster Monitoring Agent is designed to help keep track of CPU usages on servers; the goal of this project is to have a monitoring agent scripts that keep a minute by minute update of the CPU statuses of all servers to be sent to a central Postgres sequel (PSQL) database for safekeeping. To do that, the monitoring agent has a docker PSQL container in one of the servers and collects the basic host information of all the other servers. Then, a script that is scheduled on a crontab to run every minute that will continuously send the systems' CPU information to the PSQL database.
+The Linux Cluster Monitoring Agent is designed to help keep track of CPU usages on servers; the goal of this project is to have a monitoring agent scripts that keeps a minute by minute update of the CPU statuses of all servers to be sent to a central Postgres sequel (PSQL) database for safekeeping. To do that, the monitoring agent creates a docker PSQL container in one of the servers and collects basic host information from all the other servers. A script is scheduled on a crontab to run every minute to continuously send the systems' CPU information to the PSQL database.
   
 ## Architecture and Design
 ![Image of Architecture](./assets/Architecture.png)
@@ -27,7 +27,7 @@ The `host_usage` table will record the CPU usage data from the individual server
 
 `host_usage` table will record the following information
 * `timestamp` will record the UTC time when the entry was sent to the DB.
-* `host_id` will refrence the host id from `hosts_info` table to identify which computer sent the report.
+* `host_id` will reference the host id from `hosts_info` table to identify which computer sent the report.
 * `memory_free` will record how much of the memory (in MB) is not in use.
 * `cpu_idle` will record the percentage of CPU that is idle.
 * `cpu_kernel` will record the percentage of the kernel is being spent idle.

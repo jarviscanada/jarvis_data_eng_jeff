@@ -14,6 +14,7 @@ cpu_mhz=$(lscpu | egrep "^CPU MHz:" | awk '{print $3}' | xargs)
 l2_cache=$( lscpu | egrep "^L2 cache:" | awk '{print $3}' | xargs)
 total_mem=$(cat /proc/meminfo | egrep "^MemTotal:" | awk '{print $2}' | xargs)
 timestamp= timestamp
+
 #usage
 memory_free=$(vmstat --unit M | awk 'FNR == 3 {print $4}')
 cpu_idle=$(vmstat | awk 'FNR == 3 {print $15}')

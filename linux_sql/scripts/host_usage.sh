@@ -25,8 +25,27 @@ disk_io=$(vmstat -d | awk 'FNR == 3 {print $10}')
 disk_available=$(df -BM /| awk 'FNR == 2 {print $4}')
 
 # Construct the insert statement
-insert_statement="INSERT INTO host_usage (timestamp,host_id,memory_free,cpu_idle,cpu_kernel,disk_io,disk_available) 
-				  VALUES ($timestamp,(SELECT id FROM host_info WHERE hostname = $hostname),$memory_free,$cpu_idle,$cpu_kernel,$disk_io,$disk_available)"
+insert_statement=	"INSERT INTO host_usage (
+					  timestamp, host_id, memory_free, cpu_idle, 
+					  cpu_kernel, disk_io, disk_available
+					) 
+					VALUES 
+					  (
+					    $timestamp, 
+					    (
+					      SELECT 
+					        id 
+					      FROM 
+					        host_info 
+					      WHERE 
+					        hostname = $hostname
+					    ), 
+					    $memory_free, 
+					    $cpu_idle, 
+					    $cpu_kernel, 
+					    $disk_io, 
+					    $disk_available
+					  )"
 
 psql -h $psql_host -p $psql_port -d $db_name -U $psql_user -c $insert_statement
 

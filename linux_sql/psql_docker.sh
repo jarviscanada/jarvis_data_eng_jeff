@@ -1,6 +1,6 @@
 #! /bin/bash
 
-#assign the arguements
+#assign the arguments
 instruction=$1
 password=$2
 
@@ -11,17 +11,17 @@ then
 	exit 1
 fi
 
-# Check that the command is to start or stop docker
+# Check that the instruction is to start or stop docker
 if [ $instruction != "start" ] || [ $instruction != "stop" ]
 then
-	echo "Incorrect command, use ./psql_docker.sh start | stop [password]"
+	echo "Incorrect command, usage ./psql_docker.sh start | stop [password]"
 	exit 1
 fi
 
 # Handle starting docker logic
 if [ $instruction == "start" ];
 then
-	# start docker or give the status if docker is already started
+	# start docker or provide status if docker is already started
 	systemctl status docker  || systemctl start docker
 	
 	# Check if the PSQL container already exists

@@ -26,8 +26,18 @@ total_mem=$(cat /proc/meminfo | egrep "^MemTotal:" | awk '{print $2}' | xargs)
 timestamp=$(date "+%Y-%m-%d-%H:%M:%S")
 
 #Construct the insert statement
-insert_statement="INSERT INTO host_info (hostname,cpu_number,cpu_architecture,cpu_model,cpu_mhz,L2_cache,total_mem,timestamp)
-					VALUES ($hostname,$cpu_number,$cpu_architecture,$cpu_model,$cpu_mhz,$L2_cache,$total_mem, $timestamp)"
+insert_statement="INSERT INTO host_info (
+					  hostname, cpu_number, cpu_architecture, 
+					  cpu_model, cpu_mhz, L2_cache, total_mem, 
+					  timestamp
+					) 
+					VALUES 
+					  (
+					    $hostname, $cpu_number, $cpu_architecture, 
+					    $cpu_model, $cpu_mhz, $L2_cache, 
+					    $total_mem, $timestamp
+					  )
+					"
 
 # Call the psql container
 psql -h $psql_host -p $psql_port -d $db_name -U $psql_user -c $insert_statement

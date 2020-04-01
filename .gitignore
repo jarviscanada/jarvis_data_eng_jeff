@@ -8,4 +8,5 @@ target/
 *.iml
 .idea/
 .eclipse
+core_java/src.zip
 intellij-java-google-style.xml

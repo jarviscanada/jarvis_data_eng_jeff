@@ -167,7 +167,7 @@ public class LambdaStreamExc {
    * odd number:5!
    *
    * @param intStream an IntStream
-   * @param printer
+   * @param printer is the consumer to print the stringsx
    */
   void printOdd(IntStream intStream, Consumer<String> printer){
     IntStream oddStream = getOdd(intStream);

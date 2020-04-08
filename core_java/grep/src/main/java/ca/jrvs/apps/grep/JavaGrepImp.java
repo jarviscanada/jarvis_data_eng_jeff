@@ -1,5 +1,7 @@
 package ca.jrvs.apps.grep;
 
+import com.sun.org.slf4j.internal.Logger;
+import com.sun.org.slf4j.internal.LoggerFactory;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -9,11 +11,26 @@ import java.util.List;
 import java.util.Scanner;
 
 public class JavaGrepImp implements JavaGrep {
-
-  private String Regex;
-  private String RootPath;
+  final Logger logger = LoggerFactory.getLogger(JavaGrep.class);
+  private String regex;
+  private String rootPath;
   private String outFile;
 
+  public static void main(String[] args) {
+    if (args.length != 3 ) {
+      throw new IllegalArgumentException("USAGE: Java regex rootPath outFile");
+    }
+    JavaGrepImp JavaGrepImp = new JavaGrepImp();
+    JavaGrepImp.setRegex(args[0]);
+    JavaGrepImp.setRootPath(args[1]);
+    JavaGrepImp.setOutFile(args[2]);
+
+    try {
+      JavaGrepImp.process();
+    }catch (Exception ex){
+      JavaGrepImp.logger.error(ex.getMessage());
+    }
+  }
   /**
    * Top level search workflow
    *
@@ -23,13 +40,19 @@ public class JavaGrepImp implements JavaGrep {
   public void process() throws IOException {
     // initialize a List of string to store all the matched lines
     List<String> matchedLines = new ArrayList<>();
-
-    for (File file : listFiles(getRootPath())) {
-      for (String line : readLines(file)) {
-        if (containsPattern(line)) {
-          matchedLines.add(line);
+    try {
+      //initialize and store all the files
+      for (File file : listFiles(getRootPath())) {
+        // for each file go through parse the file and read each line
+        for (String line : readLines(file)) {
+          // for each line if that line matches the pattern store it in matchedLines
+          if (containsPattern(line)) {
+            matchedLines.add(line);
+          }
         }
       }
+    } catch(NullPointerException e){
+      e.printStackTrace();
     }
     writeToFile(matchedLines);
   }
@@ -70,20 +93,22 @@ public class JavaGrepImp implements JavaGrep {
    *
    * @param inputFile file to be read
    * @return lines
-   * @throws IllegalArgumentException
+   * @throws IllegalArgumentException (I'm not sure what throws the error)
    */
   @Override
   public List<String> readLines(File inputFile) {
     List<String> res = new ArrayList<>();
+    // use the scanner method to read each line
     Scanner scanner = null;
     try {
       scanner = new Scanner(inputFile);
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
-    if(scanner != null){
+    //check if the file is null
+    if (scanner != null) {
       scanner.useDelimiter("\\n");
-      while(scanner.hasNext()){
+      while (scanner.hasNext()) {
         res.add(scanner.next());
       }
     }
@@ -110,7 +135,7 @@ public class JavaGrepImp implements JavaGrep {
   @Override
   public void writeToFile(List<String> lines) throws IOException {
     FileWriter FileWrite = new FileWriter(getOutFile());
-    for (String line : lines){
+    for (String line : lines) {
       FileWrite.write(line);
     }
     FileWrite.close();
@@ -118,12 +143,12 @@ public class JavaGrepImp implements JavaGrep {
 
   @Override
   public String getRegex() {
-    return Regex;
+    return regex;
   }
 
   @Override
   public String getRootPath() {
-    return RootPath;
+    return rootPath;
   }
 
   @Override
@@ -133,12 +158,12 @@ public class JavaGrepImp implements JavaGrep {
 
   @Override
   public void setRegex(String regex) {
-    Regex = regex;
+    this.regex = regex;
   }
 
   @Override
   public void setRootPath(String rootPath) {
-    RootPath = rootPath;
+    this.rootPath = rootPath;
   }
 
   @Override

@@ -136,7 +136,7 @@ public class JavaGrepImp implements JavaGrep {
   public void writeToFile(List<String> lines) throws IOException {
     FileWriter FileWrite = new FileWriter(getOutFile());
     for (String line : lines) {
-      FileWrite.write(line);
+      FileWrite.write(line + "\n");
     }
     FileWrite.close();
   }

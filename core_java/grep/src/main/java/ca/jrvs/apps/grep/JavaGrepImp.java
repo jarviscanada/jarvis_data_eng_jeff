@@ -77,7 +77,7 @@ public class JavaGrepImp implements JavaGrep {
     // recursively go through the directory and get all the files
     for (File file : directoryContents) {
       if (file.isDirectory()) {
-        List<File> innerDirectory = listFiles(file.getName());
+        List<File> innerDirectory = listFiles(rootDir + "/" + file.getName());
         if (innerDirectory != null) {
           res.addAll(innerDirectory);
         }

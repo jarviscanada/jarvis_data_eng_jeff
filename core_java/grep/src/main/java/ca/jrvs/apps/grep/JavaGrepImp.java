@@ -38,14 +38,10 @@ public class JavaGrepImp implements JavaGrep {
    */
   @Override
   public void process() throws IOException {
-    // initialize a List of string to store all the matched lines
     List<String> matchedLines = new ArrayList<>();
     try {
-      //initialize and store all the files
       for (File file : listFiles(getRootPath())) {
-        // for each file go through parse the file and read each line
         for (String line : readLines(file)) {
-          // for each line if that line matches the pattern store it in matchedLines
           if (containsPattern(line)) {
             matchedLines.add(line);
           }
@@ -65,16 +61,12 @@ public class JavaGrepImp implements JavaGrep {
    */
   @Override
   public List<File> listFiles(String rootDir) {
-    //initialize return list
     List<File> res = new ArrayList<>();
-    //Open rootDir and get the contents of rootDir
     File directory = new File(rootDir);
     File[] directoryContents = directory.listFiles();
-    //if Directory is empty return null
     if (directoryContents == null) {
       return null;
     }
-    // recursively go through the directory and get all the files
     for (File file : directoryContents) {
       if (file.isDirectory()) {
         List<File> innerDirectory = listFiles(rootDir + "/" + file.getName());
@@ -98,14 +90,12 @@ public class JavaGrepImp implements JavaGrep {
   @Override
   public List<String> readLines(File inputFile) {
     List<String> res = new ArrayList<>();
-    // use the scanner method to read each line
     Scanner scanner = null;
     try {
       scanner = new Scanner(inputFile);
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
-    //check if the file is null
     if (scanner != null) {
       scanner.useDelimiter("\\n");
       while (scanner.hasNext()) {
